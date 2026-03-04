@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intro to Cursor Coding</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0f12;
+            --surface: #16191e;
+            --border: #2a2f38;
+            --muted: #8b929e;
+            --accent: #7dd3fc;
+            --accent-dim: #38bdf8;
+            --green: #86efac;
+            --amber: #fcd34d;
+        }
+        body {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            background: var(--bg);
+            color: #e2e8f0;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .gradient-heading {
+            background: linear-gradient(135deg, #7dd3fc 0%, #a78bfa 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .card:hover {
+            border-color: var(--accent-dim);
+            transform: translateY(-2px);
+        }
+        .pill {
+            background: rgba(125, 211, 252, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(125, 211, 252, 0.3);
+        }
+        pre, code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .key-combo {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            padding: 2px 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <header class="border-b border-[var(--border)] bg-[var(--surface)]/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-6 py-4">
+            <h1 class="text-xl font-semibold gradient-heading">Intro to Cursor Coding</h1>
+            <p class="text-[var(--muted)] text-sm mt-1">AI-powered editing in your IDE</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-12 space-y-16">
+        <section>
+            <h2 class="text-2xl font-semibold text-white mb-3">What is Cursor?</h2>
+            <p class="text-[var(--muted)] leading-relaxed">
+                <strong class="text-white">Cursor</strong> is a code editor built on VS Code that adds AI pair programming directly in your workflow. You write and edit code while chatting with AI, using Composer for multi-file edits, and running commands—all without leaving the editor.
+            </p>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-semibold text-white mb-4">Core features</h2>
+            <ul class="grid gap-4 sm:grid-cols-2">
+                <li class="card p-5">
+                    <span class="pill text-xs font-medium px-2.5 py-1 rounded-full">Chat</span>
+                    <h3 class="text-white font-medium mt-3">Inline chat</h3>
+                    <p class="text-[var(--muted)] text-sm mt-1">Ask questions, get explanations, and apply edits in the current file. Use <span class="key-combo font-mono">Cmd+K</span> (Mac) or <span class="key-combo font-mono">Ctrl+K</span> (Windows/Linux) for quick edits.</p>
+                </li>
+                <li class="card p-5">
+                    <span class="pill text-xs font-medium px-2.5 py-1 rounded-full">Composer</span>
+                    <h3 class="text-white font-medium mt-3">Composer</h3>
+                    <p class="text-[var(--muted)] text-sm mt-1">Describe a change and let the AI edit across multiple files. Great for refactors, new features, and fixes that span the codebase.</p>
+                </li>
+                <li class="card p-5">
+                    <span class="pill text-xs font-medium px-2.5 py-1 rounded-full">Agent</span>
+                    <h3 class="text-white font-medium mt-3">Agent mode</h3>
+                    <p class="text-[var(--muted)] text-sm mt-1">The agent can search the repo, read files, and run terminal commands to complete multi-step tasks more autonomously.</p>
+                </li>
+                <li class="card p-5">
+                    <span class="pill text-xs font-medium px-2.5 py-1 rounded-full">Context</span>
+                    <h3 class="text-white font-medium mt-3">@-mentions</h3>
+                    <p class="text-[var(--muted)] text-sm mt-1">Use <code class="text-[var(--accent)]">@codebase</code>, <code class="text-[var(--accent)]">@file</code>, <code class="text-[var(--accent)]">@docs</code>, or <code class="text-[var(--accent)]">@web</code> to give the AI precise context so answers stay relevant.</p>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-semibold text-white mb-4">Quick tips</h2>
+            <ul class="space-y-3 text-[var(--muted)]">
+                <li class="flex gap-3">
+                    <span class="text-[var(--green)] shrink-0">✓</span>
+                    <span>Be specific in prompts: include file names, behavior you want, and constraints.</span>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-[var(--green)] shrink-0">✓</span>
+                    <span>Use <strong class="text-white">.cursorrules</strong> or <strong class="text-white">.cursor/rules</strong> to set project-wide style and conventions.</span>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-[var(--green)] shrink-0">✓</span>
+                    <span>Review and edit AI suggestions before accepting—you stay in control of the code.</span>
+                </li>
+                <li class="flex gap-3">
+                    <span class="text-[var(--green)] shrink-0">✓</span>
+                    <span>For large changes, use Composer and break the work into clear steps.</span>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-semibold text-white mb-4">Learn more</h2>
+            <p class="text-[var(--muted)] mb-4">Cursor works like VS Code, so existing shortcuts and extensions carry over. For docs and updates, visit the official site.</p>
+            <a href="https://cursor.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-[var(--accent)] font-medium hover:underline">
+                cursor.com →
+            </a>
+        </section>
+    </main>
+
+    <footer class="border-t border-[var(--border)] mt-16">
+        <div class="max-w-4xl mx-auto px-6 py-6 text-[var(--muted)] text-sm">
+            Intro to Cursor Coding · AI Knowledge
+        </div>
+    </footer>
+</body>
+</html>
