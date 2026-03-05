@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools Learning Hub - Introduction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #6366f1;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+        
+        /* Collapsible content */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .collapsible-content.active {
+            max-height: 5000px;
+            transition: max-height 0.5s ease-in;
+        }
+        
+        /* Modal backdrop blur */
+        .modal-backdrop {
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Card hover effects */
+        .tool-card {
+            transition: all 0.3s ease;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Code blocks */
+        pre {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        
+        code {
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Badge styles */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-new {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .badge-popular {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .badge-free {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        /* Sticky TOC */
+        .toc-sticky {
+            position: sticky;
+            top: 80px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold gradient-text">🚀 AI Tools Learning Hub</h1>
+                <div class="flex gap-4 items-center">
+                    <span class="text-sm text-gray-600">2025-2026 Edition</span>
+                    <a href="index.html" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm">
+                        ← Back to Hub
+                    </a>
+                </div>
+            </div>
+            <p class="text-gray-600 mt-2">Introduction</p>
+        </div>
+    </header>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <section id="intro" class="mb-12 fade-in">
+                    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-xl p-8 text-white">
+                        <h2 class="text-3xl font-bold mb-4">Welcome to the AI Tools Learning Hub</h2>
+                        <p class="text-lg mb-4">
+                            Your comprehensive guide to mastering AI tools for development, infrastructure, creativity, and business in 2025-2026.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                            <div class="bg-white/10 backdrop-blur rounded-lg p-4">
+                                <div class="text-3xl mb-2">🚀</div>
+                                <div class="font-bold">Fast Setup</div>
+                                <div class="text-sm">Get started in minutes</div>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur rounded-lg p-4">
+                                <div class="text-3xl mb-2">🎯</div>
+                                <div class="font-bold">Production Ready</div>
+                                <div class="text-sm">Enterprise-grade tools</div>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur rounded-lg p-4">
+                                <div class="text-3xl mb-2">💡</div>
+                                <div class="font-bold">Real Examples</div>
+                                <div class="text-sm">Practical use cases</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+    </div>
+
+
+
+    <script>
+        // Toggle collapsible sections
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            const button = event.target;
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                button.textContent = 'Show More ▼';
+            } else {
+                content.classList.add('active');
+                button.textContent = 'Show Less ▲';
+            }
+        }
+
+        // Toggle examples
+        function toggleExample(id) {
+            const content = document.getElementById(id);
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+            } else {
+                content.classList.add('active');
+            }
+        }
+
+        // Modal functions
+        function showModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on backdrop click
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal-backdrop')) {
+                event.target.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Dark mode toggle (basic implementation)
+        function toggleDarkMode() {
+            // This would require more CSS, just showing the concept
+            alert('Dark mode coming soon! This would toggle a dark theme for the entire page.');
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Add active state to TOC links based on scroll position
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollPosition = window.scrollY + 100;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                const tocLink = document.querySelector(`a[href="#${sectionId}"]`);
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    document.querySelectorAll('aside nav a').forEach(link => {
+                        link.classList.remove('bg-indigo-100', 'font-bold');
+                    });
+                    if (tocLink) {
+                        tocLink.classList.add('bg-indigo-100', 'font-bold');
+                    }
+                }
+            });
+        });
+
+        // Console welcome message
+        console.log('%c🚀 AI Tools Learning Hub', 'font-size: 24px; font-weight: bold; color: #6366f1;');
+        console.log('%cWelcome to the comprehensive AI tools guide!', 'font-size: 14px; color: #64748b;');
+        console.log('%c70+ tools | 150+ links | 11 categories', 'font-size: 12px; color: #94a3b8;');
+    </script>
+
+</body>
+</html>

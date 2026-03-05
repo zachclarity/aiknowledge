@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools Learning Hub - Music Creation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #6366f1;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+        
+        /* Collapsible content */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .collapsible-content.active {
+            max-height: 5000px;
+            transition: max-height 0.5s ease-in;
+        }
+        
+        /* Modal backdrop blur */
+        .modal-backdrop {
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Card hover effects */
+        .tool-card {
+            transition: all 0.3s ease;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Code blocks */
+        pre {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        
+        code {
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Badge styles */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-new {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .badge-popular {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .badge-free {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        /* Sticky TOC */
+        .toc-sticky {
+            position: sticky;
+            top: 80px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold gradient-text">🚀 AI Tools Learning Hub</h1>
+                <div class="flex gap-4 items-center">
+                    <span class="text-sm text-gray-600">2025-2026 Edition</span>
+                    <a href="index.html" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm">
+                        ← Back to Hub
+                    </a>
+                </div>
+            </div>
+            <p class="text-gray-600 mt-2">Music Creation</p>
+        </div>
+    </header>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <section id="music" class="mb-12">
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-6">🎵 Music & 🎬 Video Creation with AI</h2>
+                        
+                        <!-- How It Works -->
+                        <div class="mb-8 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 border-2 border-indigo-200">
+                            <h3 class="text-2xl font-bold mb-4 text-indigo-900">🧠 How AI Creates Music & Video</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                
+                                <!-- Music Generation -->
+                                <div class="bg-white rounded-lg p-4">
+                                    <h4 class="font-bold text-lg mb-2 text-purple-700">🎵 Music Generation (Suno v5)</h4>
+                                    <div class="space-y-3 text-sm">
+                                        <div>
+                                            <div class="font-semibold text-purple-600 mb-1">Audio Diffusion Models</div>
+                                            <p class="text-gray-700 text-xs">
+                                                Similar to image diffusion (Stable Diffusion), but for audio waveforms. 
+                                                Starts with noise and gradually "denoises" into music matching your prompt.
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-purple-600 mb-1">Multi-Modal Training</div>
+                                            <p class="text-gray-700 text-xs">
+                                                Trained on millions of songs with lyrics, genres, instruments, vocals. 
+                                                Learns patterns like "jazz = trumpet + swing rhythm" or "rock = distorted guitar + drums".
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-purple-600 mb-1">Vocal Synthesis</div>
+                                            <p class="text-gray-700 text-xs">
+                                                Separate model generates human-like vocals with emotion, timing, pitch. 
+                                                Can create multiple voice types (male, female, various tones).
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-purple-600 mb-1">Structure Understanding</div>
+                                            <p class="text-gray-700 text-xs">
+                                                AI understands song structure: intro → verse → chorus → bridge → outro. 
+                                                Creates coherent arrangements with appropriate transitions.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Video Generation -->
+                                <div class="bg-white rounded-lg p-4">
+                                    <h4 class="font-bold text-lg mb-2 text-blue-700">🎬 Video Generation (Runway, Luma)</h4>
+                                    <div class="space-y-3 text-sm">
+                                        <div>
+                                            <div class="font-semibold text-blue-600 mb-1">Temporal Consistency</div>
+                                            <p class="text-gray-700 text-xs">
+                                                Biggest challenge in AI video. Models must maintain object identity, 
+                                                motion, and lighting across frames (24-30 fps).
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-blue-600 mb-1">3D World Modeling</div>
+                                            <p class="text-gray-700 text-xs">
+                                                Advanced models (Runway Gen-4, Luma Ray3) understand 3D space, physics, 
+                                                camera movements. Not just generating pixels, but simulating scenes.
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-blue-600 mb-1">Motion Prediction</div>
+                                            <p class="text-gray-700 text-xs">
+                                                AI predicts how objects move naturally: gravity, momentum, collision. 
+                                                Water flows, fabric wrinkles, smoke disperses realistically.
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <div class="font-semibold text-blue-600 mb-1">Frame Interpolation</div>
+                                            <p class="text-gray-700 text-xs">
+                                                Generates in-between frames for smooth motion. Advanced optical flow 
+                                                algorithms ensure no jittering or artifacts.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Manual vs AI -->
+                        <div class="mb-8 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 border-2 border-yellow-200">
+                            <h3 class="text-2xl font-bold mb-4 text-yellow-900">⚡ Traditional vs AI Creation Process</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                
+                                <!-- Music Production -->
+                                <div>
+                                    <h4 class="font-bold text-lg mb-3 text-center">🎵 Music Production</h4>
+                                    
+                                    <div class="bg-white rounded-lg p-4 mb-4">
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-xl mr-2">🎹</span>
+                                            <div class="font-bold text-gray-800">Traditional Method</div>
+                                        </div>
+                                        <ol class="space-y-2 text-xs text-gray-700">
+                                            <li><strong>1.</strong> Learn instrument (years of practice)</li>
+                                            <li><strong>2.</strong> Write melody & lyrics (hours/days)</li>
+                                            <li><strong>3.</strong> Record instruments (need studio, $$$)</li>
+                                            <li><strong>4.</strong> Record vocals (need singer, mic setup)</li>
+                                            <li><strong>5.</strong> Mix & master (specialized skills)</li>
+                                            <li><strong>6.</strong> Final production (days/weeks)</li>
+                                        </ol>
+                                        <div class="mt-3 p-2 bg-red-100 rounded text-xs">
+                                            <strong>Cost:</strong> $500-$5,000+ per song<br>
+                                            <strong>Time:</strong> Weeks to months<br>
+                                            <strong>Skills:</strong> High technical barrier
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-white rounded-lg p-4 border-2 border-green-400">
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-xl mr-2">🤖</span>
+                                            <div class="font-bold text-gray-800">AI Method (Suno)</div>
+                                        </div>
+                                        <ol class="space-y-2 text-xs text-gray-700">
+                                            <li><strong>1.</strong> Write prompt: "upbeat pop song about summer" (30 sec)</li>
+                                            <li><strong>2.</strong> AI generates full song with vocals (60 sec)</li>
+                                            <li><strong>3.</strong> Listen & iterate if needed (5 min)</li>
+                                            <li><strong>4.</strong> Download high-quality MP3 (instant)</li>
+                                        </ol>
+                                        <div class="mt-3 p-2 bg-green-100 rounded text-xs">
+                                            <strong>Cost:</strong> $0-$30/month unlimited<br>
+                                            <strong>Time:</strong> 2-5 minutes per song<br>
+                                            <strong>Skills:</strong> Zero technical knowledge
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Video Production -->
+                                <div>
+                                    <h4 class="font-bold text-lg mb-3 text-center">🎬 Video Production</h4>
+                                    
+                                    <div class="bg-white rounded-lg p-4 mb-4">
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-xl mr-2">🎥</span>
+                                            <div class="font-bold text-gray-800">Traditional Method</div>
+                                        </div>
+                                        <ol class="space-y-2 text-xs text-gray-700">
+                                            <li><strong>1.</strong> Write script & storyboard (days)</li>
+                                            <li><strong>2.</strong> Hire crew, actors, rent equipment ($$$)</li>
+                                            <li><strong>3.</strong> Scout locations, get permits</li>
+                                            <li><strong>4.</strong> Film scenes (hours/days of shooting)</li>
+                                            <li><strong>5.</strong> Edit footage (days of work)</li>
+                                            <li><strong>6.</strong> Color grading, VFX, sound (specialized)</li>
+                                        </ol>
+                                        <div class="mt-3 p-2 bg-red-100 rounded text-xs">
+                                            <strong>Cost:</strong> $5,000-$100,000+ per project<br>
+                                            <strong>Time:</strong> Weeks to months<br>
+                                            <strong>Team:</strong> 5-50+ people
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-white rounded-lg p-4 border-2 border-green-400">
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-xl mr-2">🤖</span>
+                                            <div class="font-bold text-gray-800">AI Method (Runway/Luma)</div>
+                                        </div>
+                                        <ol class="space-y-2 text-xs text-gray-700">
+                                            <li><strong>1.</strong> Write prompt or upload reference image (1 min)</li>
+                                            <li><strong>2.</strong> AI generates video clip (2-5 min)</li>
+                                            <li><strong>3.</strong> Iterate on camera movements, style (10 min)</li>
+                                            <li><strong>4.</strong> Download 1080p/4K video (instant)</li>
+                                        </ol>
+                                        <div class="mt-3 p-2 bg-green-100 rounded text-xs">
+                                            <strong>Cost:</strong> $10-$30/month<br>
+                                            <strong>Time:</strong> 5-15 minutes per clip<br>
+                                            <strong>Team:</strong> Solo creator
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- What Changed -->
+                            <div class="bg-white rounded-lg p-4">
+                                <h4 class="font-bold mb-3 text-gray-800">🎯 The Creative Democratization</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                                    <div>
+                                        <div class="font-semibold text-indigo-700 mb-1">💰 Cost Barrier Removed</div>
+                                        <p class="text-gray-600 text-xs">From $5K-$100K to $0-$30/month. Anyone can create professional content.</p>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-indigo-700 mb-1">⏱️ Time to Market</div>
+                                        <p class="text-gray-600 text-xs">Weeks/months → minutes. Test ideas rapidly, iterate quickly.</p>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-indigo-700 mb-1">🎓 Skill Requirements</div>
+                                        <p class="text-gray-600 text-xs">Years of training → natural language. Focus on creativity, not technique.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tools Grid -->
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            
+                            <!-- Music -->
+                            <div>
+                                <h3 class="text-2xl font-bold mb-4 text-purple-600">Music Creation</h3>
+                                <div class="space-y-4">
+                                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-6 border border-purple-200">
+                                        <h4 class="text-xl font-bold mb-2">Suno AI</h4>
+                                        <div class="text-3xl mb-2">⭐</div>
+                                        <p class="text-sm text-gray-600 mb-3">
+                                            Generate complete songs with vocals in 60 seconds. v5 model = studio quality.
+                                        </p>
+                                        <div class="flex gap-2">
+                                            <a href="https://suno.com/" target="_blank" class="px-4 py-2 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition">
+                                                Create Music
+                                            </a>
+                                            <button onclick="showModal('suno-modal')" class="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 transition">
+                                                Examples
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Video -->
+                            <div id="video">
+                                <h3 class="text-2xl font-bold mb-4 text-indigo-600">Video Generation</h3>
+                                <div class="space-y-4">
+                                    <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-lg p-6 border border-indigo-200">
+                                        <h4 class="text-xl font-bold mb-2">Runway Gen-4</h4>
+                                        <div class="text-3xl mb-2">🎬</div>
+                                        <p class="text-sm text-gray-600 mb-3">
+                                            Professional 4K video with camera controls. Trusted by major studios.
+                                        </p>
+                                        <a href="https://runwayml.com/" target="_blank" class="inline-block px-4 py-2 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700 transition">
+                                            Start Creating
+                                        </a>
+                                    </div>
+
+                                    <div class="bg-gradient-to-br from-cyan-50 to-teal-50 rounded-lg p-6 border border-cyan-200">
+                                        <h4 class="text-xl font-bold mb-2">Luma Dream Machine</h4>
+                                        <p class="text-sm text-gray-600 mb-3">
+                                            Cinematic motion and realistic physics. Ray3 model.
+                                        </p>
+                                        <a href="https://lumalabs.ai/" target="_blank" class="inline-block px-4 py-2 bg-cyan-600 text-white text-sm rounded hover:bg-cyan-700 transition">
+                                            Try Luma
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+    </div>
+
+    <!-- Suno Modal -->
+    <div id="suno-modal" class="hidden fixed inset-0 bg-black/50 modal-backdrop z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold text-gray-800">Suno AI - Examples & Use Cases</h3>
+                    <button onclick="hideModal('suno-modal')" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-purple-50 rounded-lg p-4">
+                        <h4 class="font-bold text-purple-900 mb-2">🎵 Example Prompts</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="bg-white p-3 rounded">
+                                <p class="font-semibold text-purple-700">"Upbeat electronic dance music for a fitness video"</p>
+                                <p class="text-gray-600 mt-1">→ Generates 2-minute EDM track with energetic beats</p>
+                            </div>
+                            <div class="bg-white p-3 rounded">
+                                <p class="font-semibold text-purple-700">"Acoustic guitar ballad about missing home with female vocals"</p>
+                                <p class="text-gray-600 mt-1">→ Complete song with lyrics and emotional vocals</p>
+                            </div>
+                            <div class="bg-white p-3 rounded">
+                                <p class="font-semibold text-purple-700">"Jazzy background music for a cafe, instrumental only"</p>
+                                <p class="text-gray-600 mt-1">→ Smooth instrumental jazz perfect for ambiance</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-pink-50 rounded-lg p-4">
+                        <h4 class="font-bold text-pink-900 mb-2">🎬 Real-World Uses</h4>
+                        <ul class="space-y-2 text-sm text-gray-700">
+                            <li>✓ <strong>YouTube Creators:</strong> Background music without copyright issues</li>
+                            <li>✓ <strong>Podcasters:</strong> Custom intro/outro themes</li>
+                            <li>✓ <strong>Game Developers:</strong> Soundtrack generation for indie games</li>
+                            <li>✓ <strong>Marketers:</strong> Jingles and brand music</li>
+                            <li>✓ <strong>Filmmakers:</strong> Scene-specific background scores</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-yellow-50 rounded-lg p-4">
+                        <h4 class="font-bold text-yellow-900 mb-2">💰 Pricing</h4>
+                        <div class="grid grid-cols-3 gap-2 text-xs">
+                            <div class="bg-white p-3 rounded text-center">
+                                <div class="font-bold">Free</div>
+                                <div class="text-gray-600">10 songs/day</div>
+                            </div>
+                            <div class="bg-white p-3 rounded text-center">
+                                <div class="font-bold">$10/mo</div>
+                                <div class="text-gray-600">500 songs</div>
+                            </div>
+                            <div class="bg-white p-3 rounded text-center">
+                                <div class="font-bold">$30/mo</div>
+                                <div class="text-gray-600">2000 songs</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex gap-2">
+                    <a href="https://suno.com/" target="_blank" class="flex-1 px-4 py-2 bg-purple-600 text-white text-center rounded hover:bg-purple-700 transition">
+                        Start Creating
+                    </a>
+                    <a href="https://suno.com/hub/how-to-make-a-song" target="_blank" class="flex-1 px-4 py-2 bg-gray-200 text-gray-700 text-center rounded hover:bg-gray-300 transition">
+                        Tutorials
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        // Toggle collapsible sections
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            const button = event.target;
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                button.textContent = 'Show More ▼';
+            } else {
+                content.classList.add('active');
+                button.textContent = 'Show Less ▲';
+            }
+        }
+
+        // Toggle examples
+        function toggleExample(id) {
+            const content = document.getElementById(id);
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+            } else {
+                content.classList.add('active');
+            }
+        }
+
+        // Modal functions
+        function showModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on backdrop click
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal-backdrop')) {
+                event.target.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Dark mode toggle (basic implementation)
+        function toggleDarkMode() {
+            // This would require more CSS, just showing the concept
+            alert('Dark mode coming soon! This would toggle a dark theme for the entire page.');
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Add active state to TOC links based on scroll position
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollPosition = window.scrollY + 100;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                const tocLink = document.querySelector(`a[href="#${sectionId}"]`);
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    document.querySelectorAll('aside nav a').forEach(link => {
+                        link.classList.remove('bg-indigo-100', 'font-bold');
+                    });
+                    if (tocLink) {
+                        tocLink.classList.add('bg-indigo-100', 'font-bold');
+                    }
+                }
+            });
+        });
+
+        // Console welcome message
+        console.log('%c🚀 AI Tools Learning Hub', 'font-size: 24px; font-weight: bold; color: #6366f1;');
+        console.log('%cWelcome to the comprehensive AI tools guide!', 'font-size: 14px; color: #64748b;');
+        console.log('%c70+ tools | 150+ links | 11 categories', 'font-size: 12px; color: #94a3b8;');
+    </script>
+
+</body>
+</html>

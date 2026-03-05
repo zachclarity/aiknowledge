@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Demo Tutorial - Build Your Own Code Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        midnight: '#0f172a',
+                        slate: {
+                            850: '#1a2332',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .code-block {
+            background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+        }
+        .card-glow:hover {
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.15);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .toc-item {
+            border-left: 2px solid #334155;
+            transition: all 0.2s ease;
+        }
+        .toc-item:hover {
+            border-left-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+        }
+        pre::-webkit-scrollbar { height: 6px; }
+        pre::-webkit-scrollbar-track { background: #1e293b; border-radius: 3px; }
+        pre::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        .flow-arrow {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-midnight text-slate-300 font-sans">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 bg-midnight/90 backdrop-blur-md border-b border-slate-800 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <span class="font-semibold text-white text-lg">RAG Tutorial</span>
+            </div>
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#overview" class="nav-link text-sm text-slate-400 hover:text-white transition">Overview</a>
+                <a href="#architecture" class="nav-link text-sm text-slate-400 hover:text-white transition">Architecture</a>
+                <a href="#docker" class="nav-link text-sm text-slate-400 hover:text-white transition">Docker</a>
+                <a href="#code" class="nav-link text-sm text-slate-400 hover:text-white transition">Code</a>
+                <a href="#dependencies" class="nav-link text-sm text-slate-400 hover:text-white transition">Dependencies</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 text-sm text-slate-400 mb-6">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                Beginner Friendly Tutorial
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                Build a <span class="gradient-text">RAG-Powered</span><br>Code Assistant
+            </h1>
+            <p class="text-lg text-slate-400 max-w-2xl mx-auto mb-10">
+                Learn how to combine Ollama, ChromaDB, and Docker to create an intelligent code search system that understands your codebase.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#toc" class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium hover:opacity-90 transition">
+                    Start Learning →
+                </a>
+                <a href="https://github.com/zachclarity/ollamatut101" target="_blank" class="px-6 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white font-medium hover:bg-slate-700 transition flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-6 pb-20">
+        <div class="grid lg:grid-cols-4 gap-10">
+            <!-- Table of Contents Sidebar -->
+            <aside class="lg:col-span-1">
+                <div class="sticky top-24">
+                    <h3 id="toc" class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Table of Contents</h3>
+                    <nav class="space-y-1">
+                        <a href="#overview" class="toc-item block pl-4 py-2 text-sm text-slate-400 hover:text-white transition">1. What is RAG?</a>
+                        <a href="#architecture" class="toc-item block pl-4 py-2 text-sm text-slate-400 hover:text-white transition">2. Architecture Overview</a>
+                        <a href="#components" class="toc-item block pl-4 py-2 text-sm text-slate-400 hover:text-white transition">3. Core Components</a>
+                        <a href="#docker" class="toc-item block pl-4 py-2 text-sm text-slate-400 hover:text-white transition">4. Docker Setup</a>
+                        <a href="#code" class="toc-item block pl-4 py-2 text-sm text-slate-400 hover:text-white transition">5. Application Code</a>
+                        <a href="#dependencies" class="toc-item block pl-4 py-2 text-sm text-slate-400 hover:text-white transition">6. Dependencies</a>
+                        <a href="#running" class="toc-item block pl-4 py-2 text-sm text-slate-400 hover:text-white transition">7. Running the Demo</a>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <div class="lg:col-span-3 space-y-16">
+
+                <!-- Section 1: What is RAG -->
+                <section id="overview" class="scroll-mt-24">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 text-sm font-semibold">1</span>
+                        <h2 class="text-2xl font-bold text-white">What is RAG?</h2>
+                    </div>
+                    
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 mb-6">
+                        <p class="text-slate-300 leading-relaxed mb-4">
+                            <strong class="text-white">RAG (Retrieval-Augmented Generation)</strong> is a technique that enhances Large Language Models by giving them access to external knowledge. Instead of relying solely on what the model learned during training, RAG:
+                        </p>
+                        <ol class="space-y-3 text-slate-300">
+                            <li class="flex items-start gap-3">
+                                <span class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-semibold">1</span>
+                                <span><strong class="text-white">Retrieves</strong> relevant information from a knowledge base (your codebase)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs flex items-center justify-center font-semibold">2</span>
+                                <span><strong class="text-white">Augments</strong> the user's question with that context</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="flex-shrink-0 w-6 h-6 rounded-full bg-pink-500/20 text-pink-400 text-xs flex items-center justify-center font-semibold">3</span>
+                                <span><strong class="text-white">Generates</strong> an accurate response using the LLM</span>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-2xl p-6">
+                        <h4 class="text-white font-semibold mb-2">💡 Why RAG for Code?</h4>
+                        <p class="text-slate-400 text-sm">
+                            LLMs don't know about your specific codebase. RAG bridges this gap by letting you ask questions like "What S3 bucket is defined?" or "What happens in the test stage?" and getting answers based on YOUR actual code.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Section 2: Architecture -->
+                <section id="architecture" class="scroll-mt-24">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 text-sm font-semibold">2</span>
+                        <h2 class="text-2xl font-bold text-white">Architecture Overview</h2>
+                    </div>
+
+                    <!-- Visual Flow Diagram -->
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-8 mb-6">
+                        <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-center">
+                            <div class="bg-slate-700/50 rounded-xl p-4 w-40">
+                                <div class="text-3xl mb-2">📁</div>
+                                <div class="text-white font-medium text-sm">Your Code</div>
+                                <div class="text-slate-500 text-xs">.py .js .tf .yml</div>
+                            </div>
+                            <div class="text-blue-400 flow-arrow text-2xl">→</div>
+                            <div class="bg-slate-700/50 rounded-xl p-4 w-40">
+                                <div class="text-3xl mb-2">🦙</div>
+                                <div class="text-white font-medium text-sm">Ollama</div>
+                                <div class="text-slate-500 text-xs">Embeddings</div>
+                            </div>
+                            <div class="text-purple-400 flow-arrow text-2xl">→</div>
+                            <div class="bg-slate-700/50 rounded-xl p-4 w-40">
+                                <div class="text-3xl mb-2">🗄️</div>
+                                <div class="text-white font-medium text-sm">ChromaDB</div>
+                                <div class="text-slate-500 text-xs">Vector Store</div>
+                            </div>
+                            <div class="text-pink-400 flow-arrow text-2xl">→</div>
+                            <div class="bg-slate-700/50 rounded-xl p-4 w-40">
+                                <div class="text-3xl mb-2">🤖</div>
+                                <div class="text-white font-medium text-sm">LLM</div>
+                                <div class="text-slate-500 text-xs">Mistral</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-slate-800/30 border border-slate-700/50 rounded-xl p-5">
+                            <h4 class="text-white font-semibold mb-2">📥 Indexing Phase</h4>
+                            <p class="text-slate-400 text-sm">Code files are chunked, embedded using Ollama's embedding model, and stored in ChromaDB with metadata.</p>
+                        </div>
+                        <div class="bg-slate-800/30 border border-slate-700/50 rounded-xl p-5">
+                            <h4 class="text-white font-semibold mb-2">🔍 Query Phase</h4>
+                            <p class="text-slate-400 text-sm">Questions are embedded, similar chunks are retrieved from ChromaDB, and the LLM generates answers using that context.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Core Components -->
+                <section id="components" class="scroll-mt-24">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-green-500/20 text-green-400 text-sm font-semibold">3</span>
+                        <h2 class="text-2xl font-bold text-white">Core Components</h2>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Ollama -->
+                        <div class="card-glow bg-slate-800/50 border border-slate-700 rounded-2xl p-6 transition-all duration-300">
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-white text-xl flex-shrink-0">🦙</div>
+                                <div>
+                                    <h3 class="text-white font-semibold text-lg mb-2">Ollama</h3>
+                                    <p class="text-slate-400 text-sm mb-3">A tool to run LLMs locally. In this demo, it serves two purposes:</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-medium">nomic-embed-text → Embeddings</span>
+                                        <span class="px-3 py-1 rounded-full bg-red-500/10 text-red-400 text-xs font-medium">Mistral → Generation</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ChromaDB -->
+                        <div class="card-glow bg-slate-800/50 border border-slate-700 rounded-2xl p-6 transition-all duration-300">
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center text-white text-xl flex-shrink-0">🗄️</div>
+                                <div>
+                                    <h3 class="text-white font-semibold text-lg mb-2">ChromaDB</h3>
+                                    <p class="text-slate-400 text-sm mb-3">An open-source vector database that stores embeddings and enables similarity search. It's the "memory" of the RAG system.</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 text-xs font-medium">Persistent Storage</span>
+                                        <span class="px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-medium">HTTP API</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Docker -->
+                        <div class="card-glow bg-slate-800/50 border border-slate-700 rounded-2xl p-6 transition-all duration-300">
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-white text-xl flex-shrink-0">🐳</div>
+                                <div>
+                                    <h3 class="text-white font-semibold text-lg mb-2">Docker Compose</h3>
+                                    <p class="text-slate-400 text-sm mb-3">Orchestrates all services (Ollama, ChromaDB, Backend) so they can communicate and persist data across restarts.</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-medium">Service Networking</span>
+                                        <span class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-medium">Volume Management</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4: Docker Setup -->
+                <section id="docker" class="scroll-mt-24">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 text-sm font-semibold">4</span>
+                        <h2 class="text-2xl font-bold text-white">Docker Setup Explained</h2>
+                    </div>
+
+                    <p class="text-slate-400 mb-6">The <code class="text-blue-400 bg-slate-800 px-2 py-0.5 rounded">docker-compose.yml</code> defines three interconnected services:</p>
+
+                    <div class="code-block rounded-2xl overflow-hidden border border-slate-700">
+                        <div class="flex items-center justify-between px-4 py-3 bg-slate-800 border-b border-slate-700">
+                            <span class="text-sm text-slate-400 font-mono">docker-compose.yml</span>
+                            <button onclick="copyCode('docker-code')" class="text-xs text-slate-500 hover:text-white transition">Copy</button>
+                        </div>
+                        <pre id="docker-code" class="p-4 overflow-x-auto text-sm font-mono"><code class="text-slate-300"><span class="text-purple-400">services:</span>
+  <span class="text-green-400"># Service 1: Ollama - Local LLM Server</span>
+  <span class="text-blue-400">ollama:</span>
+    <span class="text-slate-400">image:</span> ollama/ollama:latest
+    <span class="text-slate-400">container_name:</span> ollama
+    <span class="text-slate-400">ports:</span>
+      - <span class="text-yellow-400">"11434:11434"</span>  <span class="text-green-400"># Ollama API port</span>
+    <span class="text-slate-400">volumes:</span>
+      - ollama_storage:/root/.ollama  <span class="text-green-400"># Persist downloaded models</span>
+      - ./Modelfile:/root/Modelfile
+    <span class="text-slate-400">entrypoint:</span> <span class="text-yellow-400">></span>
+      /bin/sh -c "
+      ollama serve & 
+      sleep 5;
+      ollama pull qwen2.5-coder:0.5b;  <span class="text-green-400"># Download models on startup</span>
+      ollama create fastapi-gen -f /root/Modelfile;
+      wait"
+
+  <span class="text-green-400"># Service 2: ChromaDB - Vector Database</span>
+  <span class="text-blue-400">chromadb:</span>
+    <span class="text-slate-400">image:</span> chromadb/chroma:latest
+    <span class="text-slate-400">container_name:</span> chromadb
+    <span class="text-slate-400">ports:</span>
+      - <span class="text-yellow-400">"8000:8000"</span>  <span class="text-green-400"># ChromaDB API port</span>
+    <span class="text-slate-400">volumes:</span>
+      - chroma_data:/chroma/chroma  <span class="text-green-400"># Persist vector data</span>
+    <span class="text-slate-400">environment:</span>
+      - IS_PERSISTENT=TRUE  <span class="text-green-400"># Enable persistence</span>
+
+  <span class="text-green-400"># Service 3: Backend - Your Python App</span>
+  <span class="text-blue-400">backend:</span>
+    <span class="text-slate-400">build:</span> ./onedemo
+    <span class="text-slate-400">container_name:</span> one_app
+    <span class="text-slate-400">ports:</span>
+      - <span class="text-yellow-400">"8787:8080"</span>
+    <span class="text-slate-400">environment:</span>
+      - CHROMA_HOST=chromadb  <span class="text-green-400"># Connect to ChromaDB container</span>
+      - CHROMA_PORT=8000
+      - OLLAMA_HOST=http://ollama:11434  <span class="text-green-400"># Connect to Ollama</span>
+    <span class="text-slate-400">depends_on:</span>
+      - ollama
+      - chromadb  <span class="text-green-400"># Wait for dependencies</span>
+
+<span class="text-purple-400">volumes:</span>  <span class="text-green-400"># Named volumes for data persistence</span>
+  <span class="text-slate-400">ollama_storage:</span>
+  <span class="text-slate-400">chroma_data:</span></code></pre>
+                    </div>
+
+                    <div class="mt-6 grid md:grid-cols-3 gap-4">
+                        <div class="bg-slate-800/30 border border-slate-700/50 rounded-xl p-4">
+                            <h4 class="text-blue-400 font-medium text-sm mb-2">🔌 Ports Exposed</h4>
+                            <ul class="text-slate-400 text-xs space-y-1">
+                                <li><code class="text-yellow-400">11434</code> - Ollama API</li>
+                                <li><code class="text-yellow-400">8000</code> - ChromaDB API</li>
+                                <li><code class="text-yellow-400">8787</code> - Your App</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-800/30 border border-slate-700/50 rounded-xl p-4">
+                            <h4 class="text-purple-400 font-medium text-sm mb-2">💾 Data Volumes</h4>
+                            <ul class="text-slate-400 text-xs space-y-1">
+                                <li><code class="text-green-400">ollama_storage</code> - Models</li>
+                                <li><code class="text-green-400">chroma_data</code> - Vectors</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-800/30 border border-slate-700/50 rounded-xl p-4">
+                            <h4 class="text-cyan-400 font-medium text-sm mb-2">🔗 Service Network</h4>
+                            <p class="text-slate-400 text-xs">Containers reference each other by name (e.g., <code class="text-green-400">chromadb</code>)</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5: Application Code -->
+                <section id="code" class="scroll-mt-24">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-500/20 text-yellow-400 text-sm font-semibold">5</span>
+                        <h2 class="text-2xl font-bold text-white">Application Code Walkthrough</h2>
+                    </div>
+
+                    <p class="text-slate-400 mb-6">The <code class="text-blue-400 bg-slate-800 px-2 py-0.5 rounded">one.py</code> script handles both indexing and querying. Let's break it down:</p>
+
+                    <!-- Configuration -->
+                    <div class="mb-8">
+                        <h3 class="text-white font-semibold mb-4 flex items-center gap-2">
+                            <span class="text-blue-400">⚙️</span> Configuration
+                        </h3>
+                        <div class="code-block rounded-2xl overflow-hidden border border-slate-700">
+                            <div class="px-4 py-3 bg-slate-800 border-b border-slate-700">
+                                <span class="text-sm text-slate-400 font-mono">Configuration Variables</span>
+                            </div>
+                            <pre class="p-4 overflow-x-auto text-sm font-mono"><code class="text-slate-300"><span class="text-green-400"># Connection settings (uses Docker service names)</span>
+CHROMA_HOST = os.getenv(<span class="text-yellow-400">"CHROMA_HOST"</span>, <span class="text-yellow-400">"chromadb"</span>) 
+CHROMA_PORT = int(os.getenv(<span class="text-yellow-400">"CHROMA_PORT"</span>, <span class="text-cyan-400">8000</span>))
+
+<span class="text-green-400"># RAG configuration</span>
+COLLECTION_NAME = <span class="text-yellow-400">"multi_lang_codebase"</span>  <span class="text-green-400"># Vector collection name</span>
+EMBED_MODEL = <span class="text-yellow-400">"nomic-embed-text"</span>         <span class="text-green-400"># Embedding model</span>
+LLM_MODEL = <span class="text-yellow-400">"mistral"</span>                   <span class="text-green-400"># Generation model</span>
+CHUNK_SIZE = <span class="text-cyan-400">1500</span>                        <span class="text-green-400"># Characters per chunk</span></code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Indexing Function -->
+                    <div class="mb-8">
+                        <h3 class="text-white font-semibold mb-4 flex items-center gap-2">
+                            <span class="text-purple-400">📥</span> Indexing Function
+                        </h3>
+                        <div class="code-block rounded-2xl overflow-hidden border border-slate-700">
+                            <div class="px-4 py-3 bg-slate-800 border-b border-slate-700">
+                                <span class="text-sm text-slate-400 font-mono">index_code() - Process and Store Code</span>
+                            </div>
+                            <pre class="p-4 overflow-x-auto text-sm font-mono"><code class="text-slate-300"><span class="text-purple-400">def</span> <span class="text-blue-400">index_code</span>(path_to_index):
+    <span class="text-green-400"># Directories to skip</span>
+    ignored_dirs = {<span class="text-yellow-400">'.git'</span>, <span class="text-yellow-400">'venv'</span>, <span class="text-yellow-400">'__pycache__'</span>, <span class="text-yellow-400">'node_modules'</span>}
+    
+    <span class="text-green-400"># Supported file types</span>
+    supported_ext = {<span class="text-yellow-400">".py"</span>, <span class="text-yellow-400">".java"</span>, <span class="text-yellow-400">".js"</span>, <span class="text-yellow-400">".tf"</span>, <span class="text-yellow-400">".yml"</span>, <span class="text-yellow-400">".yaml"</span>}
+    
+    <span class="text-green-400"># Walk through files...</span>
+    <span class="text-purple-400">for</span> root, dirs, files <span class="text-purple-400">in</span> os.walk(path_to_index):
+        <span class="text-purple-400">for</span> file <span class="text-purple-400">in</span> files:
+            <span class="text-green-400"># Read file content</span>
+            <span class="text-purple-400">with</span> <span class="text-blue-400">open</span>(file_path) <span class="text-purple-400">as</span> f:
+                content = f.read()
+            
+            <span class="text-green-400"># Split into chunks</span>
+            chunks = get_chunks(content, CHUNK_SIZE)
+            
+            <span class="text-purple-400">for</span> chunk <span class="text-purple-400">in</span> chunks:
+                <span class="text-green-400"># Get embedding from Ollama</span>
+                response = ollama.embeddings(model=EMBED_MODEL, prompt=chunk)
+                
+                <span class="text-green-400"># Store in ChromaDB</span>
+                collection.add(
+                    ids=[chunk_id],
+                    embeddings=[response[<span class="text-yellow-400">"embedding"</span>]],
+                    documents=[chunk],
+                    metadatas=[{<span class="text-yellow-400">"source"</span>: file_path}]
+                )</code></pre>
+                        </div>
+                        <div class="mt-4 bg-purple-500/10 border border-purple-500/20 rounded-xl p-4">
+                            <p class="text-purple-300 text-sm">
+                                <strong>Key Insight:</strong> Each code file is split into ~1500 character chunks. Each chunk is converted to a vector (embedding) and stored with metadata about its source file.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Query Function -->
+                    <div class="mb-8">
+                        <h3 class="text-white font-semibold mb-4 flex items-center gap-2">
+                            <span class="text-pink-400">🔍</span> Query Function
+                        </h3>
+                        <div class="code-block rounded-2xl overflow-hidden border border-slate-700">
+                            <div class="px-4 py-3 bg-slate-800 border-b border-slate-700">
+                                <span class="text-sm text-slate-400 font-mono">query_code() - Search and Generate</span>
+                            </div>
+                            <pre class="p-4 overflow-x-auto text-sm font-mono"><code class="text-slate-300"><span class="text-purple-400">def</span> <span class="text-blue-400">query_code</span>(user_query):
+    <span class="text-green-400"># Step 1: Embed the user's question</span>
+    query_embed = ollama.embeddings(
+        model=EMBED_MODEL, 
+        prompt=user_query
+    )[<span class="text-yellow-400">"embedding"</span>]
+    
+    <span class="text-green-400"># Step 2: Find similar code chunks (top 3)</span>
+    results = collection.query(
+        query_embeddings=[query_embed], 
+        n_results=<span class="text-cyan-400">3</span>
+    )
+    
+    <span class="text-green-400"># Step 3: Build context from results</span>
+    context = <span class="text-yellow-400">"\n---\n"</span>.join(results[<span class="text-yellow-400">"documents"</span>][<span class="text-cyan-400">0</span>])
+    
+    <span class="text-green-400"># Step 4: Generate answer using LLM</span>
+    prompt = <span class="text-yellow-400">f"[INST] Use the code snippets below to answer: </span>{user_query}<span class="text-yellow-400">\n\nContext:\n</span>{context}<span class="text-yellow-400"> [/INST]"</span>
+    
+    response = ollama.generate(model=LLM_MODEL, prompt=prompt)
+    <span class="text-purple-400">return</span> response[<span class="text-yellow-400">"response"</span>]</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 6: Dependencies -->
+                <section id="dependencies" class="scroll-mt-24">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-pink-500/20 text-pink-400 text-sm font-semibold">6</span>
+                        <h2 class="text-2xl font-bold text-white">Dependencies Explained</h2>
+                    </div>
+
+                    <p class="text-slate-400 mb-6">The <code class="text-blue-400 bg-slate-800 px-2 py-0.5 rounded">requirements.txt</code> lists the Python packages needed:</p>
+
+                    <div class="grid gap-4">
+                        <!-- chromadb -->
+                        <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center text-yellow-400 font-mono text-sm flex-shrink-0">1</div>
+                            <div>
+                                <code class="text-lg text-yellow-400 font-mono">chromadb</code>
+                                <p class="text-slate-400 text-sm mt-1">The Python client for ChromaDB. Provides methods to create collections, add embeddings, and query for similar vectors.</p>
+                                <div class="mt-2 text-xs text-slate-500">
+                                    Used for: <code class="text-slate-400">client.get_or_create_collection()</code>, <code class="text-slate-400">collection.add()</code>, <code class="text-slate-400">collection.query()</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ollama -->
+                        <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-400 font-mono text-sm flex-shrink-0">2</div>
+                            <div>
+                                <code class="text-lg text-orange-400 font-mono">ollama</code>
+                                <p class="text-slate-400 text-sm mt-1">Official Python library for Ollama. Enables embedding generation and LLM inference through simple function calls.</p>
+                                <div class="mt-2 text-xs text-slate-500">
+                                    Used for: <code class="text-slate-400">ollama.embeddings()</code>, <code class="text-slate-400">ollama.generate()</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- requests -->
+                        <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400 font-mono text-sm flex-shrink-0">3</div>
+                            <div>
+                                <code class="text-lg text-green-400 font-mono">requests</code>
+                                <p class="text-slate-400 text-sm mt-1">Classic HTTP library for Python. A dependency used internally by other packages for making API calls.</p>
+                            </div>
+                        </div>
+
+                        <!-- httpx & httpcore -->
+                        <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 font-mono text-sm flex-shrink-0">4</div>
+                            <div>
+                                <code class="text-lg text-blue-400 font-mono">httpx</code> & <code class="text-lg text-cyan-400 font-mono">httpcore</code>
+                                <p class="text-slate-400 text-sm mt-1">Modern async-capable HTTP client. Used by the Ollama library for communicating with the Ollama server, supporting both sync and async operations.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 code-block rounded-2xl overflow-hidden border border-slate-700">
+                        <div class="px-4 py-3 bg-slate-800 border-b border-slate-700">
+                            <span class="text-sm text-slate-400 font-mono">requirements.txt</span>
+                        </div>
+                        <pre class="p-4 overflow-x-auto text-sm font-mono"><code class="text-slate-300">chromadb      <span class="text-green-400"># Vector database client</span>
+requests      <span class="text-green-400"># HTTP library (dependency)</span>
+ollama        <span class="text-green-400"># Ollama Python SDK</span>
+httpx         <span class="text-green-400"># Async HTTP client</span>
+httpcore      <span class="text-green-400"># HTTP transport library</span></code></pre>
+                    </div>
+                </section>
+
+                <!-- Section 7: Running the Demo -->
+                <section id="running" class="scroll-mt-24">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 text-sm font-semibold">7</span>
+                        <h2 class="text-2xl font-bold text-white">Running the Demo</h2>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Step 1 -->
+                        <div class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-sm font-bold flex-shrink-0">1</div>
+                            <div class="flex-1">
+                                <h4 class="text-white font-medium mb-2">Start the Services</h4>
+                                <div class="code-block rounded-xl border border-slate-700 p-4">
+                                    <code class="text-sm font-mono text-slate-300">docker-compose up -d</code>
+                                </div>
+                                <p class="text-slate-500 text-sm mt-2">This starts Ollama, ChromaDB, and your backend in detached mode.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-sm font-bold flex-shrink-0">2</div>
+                            <div class="flex-1">
+                                <h4 class="text-white font-medium mb-2">Index Your Codebase</h4>
+                                <div class="code-block rounded-xl border border-slate-700 p-4">
+                                    <code class="text-sm font-mono text-slate-300">python one.py ./path/to/your/code</code>
+                                </div>
+                                <p class="text-slate-500 text-sm mt-2">Processes all supported files and stores embeddings in ChromaDB.</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-sm font-bold flex-shrink-0">3</div>
+                            <div class="flex-1">
+                                <h4 class="text-white font-medium mb-2">Query Your Code</h4>
+                                <div class="code-block rounded-xl border border-slate-700 p-4">
+                                    <code class="text-sm font-mono text-slate-300">python one.py</code>
+                                </div>
+                                <p class="text-slate-500 text-sm mt-2">Runs example queries. Modify the script to add your own questions!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Example Queries -->
+                    <div class="mt-8 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 rounded-2xl p-6">
+                        <h4 class="text-white font-semibold mb-4">📝 Example Queries from the Demo</h4>
+                        <div class="space-y-2 font-mono text-sm">
+                            <div class="flex items-center gap-3">
+                                <span class="text-emerald-400">→</span>
+                                <code class="text-slate-300">"What S3 bucket is defined?"</code>
+                                <span class="text-slate-600">// Finds Terraform configs</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-emerald-400">→</span>
+                                <code class="text-slate-300">"What happens in the test stage?"</code>
+                                <span class="text-slate-600">// Analyzes GitLab CI</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-emerald-400">→</span>
+                                <code class="text-slate-300">"Show Java Calls"</code>
+                                <span class="text-slate-600">// Finds Java code</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-emerald-400">→</span>
+                                <code class="text-slate-300">"How is the docker composed structured?"</code>
+                                <span class="text-slate-600">// Explains Docker setup</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Summary -->
+                <section class="bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 border border-slate-700 rounded-2xl p-8">
+                    <h2 class="text-2xl font-bold text-white mb-4">🎉 Summary</h2>
+                    <p class="text-slate-300 mb-6">You've learned how to build a RAG system that can answer questions about any codebase. The key components work together like this:</p>
+                    
+                    <div class="grid md:grid-cols-4 gap-4 text-center">
+                        <div class="bg-slate-800/50 rounded-xl p-4">
+                            <div class="text-2xl mb-2">📁</div>
+                            <div class="text-white text-sm font-medium">Code Files</div>
+                            <div class="text-slate-500 text-xs">Input</div>
+                        </div>
+                        <div class="bg-slate-800/50 rounded-xl p-4">
+                            <div class="text-2xl mb-2">🧬</div>
+                            <div class="text-white text-sm font-medium">Embeddings</div>
+                            <div class="text-slate-500 text-xs">Ollama</div>
+                        </div>
+                        <div class="bg-slate-800/50 rounded-xl p-4">
+                            <div class="text-2xl mb-2">🗄️</div>
+                            <div class="text-white text-sm font-medium">Vector Store</div>
+                            <div class="text-slate-500 text-xs">ChromaDB</div>
+                        </div>
+                        <div class="bg-slate-800/50 rounded-xl p-4">
+                            <div class="text-2xl mb-2">💬</div>
+                            <div class="text-white text-sm font-medium">Answers</div>
+                            <div class="text-slate-500 text-xs">Mistral LLM</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-slate-700 flex flex-wrap gap-4 justify-center">
+                        <a href="https://github.com/zachclarity/ollamatut101" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm font-medium hover:bg-slate-700 transition">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            View Source Code
+                        </a>
+                        <a href="https://ollama.ai" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/30 text-orange-400 text-sm font-medium hover:bg-orange-500/30 transition">
+                            Learn Ollama →
+                        </a>
+                        <a href="https://docs.trychroma.com" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 text-sm font-medium hover:bg-yellow-500/30 transition">
+                            ChromaDB Docs →
+                        </a>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-8 px-6">
+        <div class="max-w-6xl mx-auto text-center text-slate-500 text-sm">
+            <p>Built with 💜 for learning RAG concepts</p>
+            <p class="mt-2">Based on <a href="https://github.com/zachclarity/ollamatut101" class="text-blue-400 hover:underline">ollamatut101</a></p>
+        </div>
+    </footer>
+
+    <script>
+        function copyCode(elementId) {
+            const codeBlock = document.getElementById(elementId);
+            const text = codeBlock.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const button = codeBlock.parentElement.querySelector('button');
+                const originalText = button.innerText;
+                button.innerText = 'Copied!';
+                setTimeout(() => button.innerText = originalText, 2000);
+            });
+        }
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Highlight active section in TOC
+        const sections = document.querySelectorAll('section[id]');
+        const tocLinks = document.querySelectorAll('.toc-item');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('border-l-blue-500', 'text-white');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('border-l-blue-500', 'text-white');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

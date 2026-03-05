@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools Learning Hub - Complete Guide 2025-2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #6366f1;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+        
+        /* Collapsible content */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .collapsible-content.active {
+            max-height: 5000px;
+            transition: max-height 0.5s ease-in;
+        }
+        
+        /* Modal backdrop blur */
+        .modal-backdrop {
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Card hover effects */
+        .tool-card {
+            transition: all 0.3s ease;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Code blocks */
+        pre {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        
+        code {
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Badge styles */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-new {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .badge-popular {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .badge-free {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        /* Sticky TOC */
+        .toc-sticky {
+            position: sticky;
+            top: 80px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold gradient-text">🚀 AI Tools Learning Hub</h1>
+                <span class="text-sm text-gray-600">2025-2026 Edition</span>
+            </div>
+            <p class="text-gray-600 mt-2">Comprehensive guide to AI tools for development, infrastructure, creativity, and more</p>
+        </div>
+    </header>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-xl p-8 text-white mb-10">
+            <h2 class="text-3xl font-bold mb-3">Welcome to the AI Tools Learning Hub</h2>
+            <p class="text-lg opacity-90">Select a section below to explore each topic in detail.</p>
+            <div class="flex gap-4 mt-4 text-sm opacity-80">
+                <span>• 75+ Tools Covered</span>
+                <span>• 200+ Resource Links</span>
+                <span>• 15 Sections</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <a href="intro.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">Introduction</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="meetup-minutes.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">Meetup Minutes</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="ai-maturity.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">AI Maturity Model</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="llm-security.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">AI & LLM Security</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="ai-transformation.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">The AI Transformation of Work</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="cloud-infra.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">Cloud Infrastructure & Kubernetes</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="coding.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">AI-Assisted Coding</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="agents.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">AI Agents</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="app-builders.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">No-Code App Builders</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="music.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">Music Creation</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="local-ai.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">Local AI (Ollama)</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="vector-db.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">Vector Databases</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="devsecops.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">DevSecOps</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="analysis.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">Analysis & Research</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+                        <a href="resources.html" class="block tool-card bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition">
+                            <h3 class="text-lg font-bold text-indigo-700 mb-2">Learning Resources</h3>
+                            <p class="text-sm text-gray-500">View section →</p>
+                        </a>
+        </div>
+    </div>
+
+</body>
+</html>
